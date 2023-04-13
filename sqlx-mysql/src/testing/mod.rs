@@ -125,6 +125,9 @@ async fn test_context(args: &TestArgs) -> Result<TestContext<MySql>, Error> {
 
     // Only run cleanup if the test binary just started.
     if DO_CLEANUP.swap(false, Ordering::SeqCst) {
+        // help trigger the test-db-race
+        std::thread::sleep(Duration::from_secs(1));
+
         do_cleanup(&mut conn).await?;
     }
 

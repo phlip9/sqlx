@@ -212,6 +212,9 @@ where
             .await
             .expect("failed to connect to setup test database");
 
+        // help trigger the test-db-race
+        std::thread::sleep(std::time::Duration::from_secs(2));
+
         setup_test_db::<DB>(&test_context.connect_opts, &args).await;
 
         let res = test_fn(test_context.pool_opts, test_context.connect_opts).await;

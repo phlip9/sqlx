@@ -130,7 +130,7 @@ for path in glob(os.path.join(os.path.dirname(__file__), "target/**/*.gc*"), rec
 for runtime in ["async-std", "tokio"]:
     for tls in ["native-tls", "rustls", "none"]:
         run(
-            f"cargo c --no-default-features --features all-databases,_unstable-all-types,macros,runtime-{runtime},tls-{tls}",
+            f"cargo c --no-default-features --features all-databases,_unstable-all-types,macros,migrate,runtime-{runtime},tls-{tls}",
             comment="check with async-std",
             tag=f"check_{runtime}_{tls}"
         )
@@ -159,7 +159,7 @@ for runtime in ["async-std", "tokio"]:
         #
 
         run(
-            f"cargo test --no-default-features --features any,sqlite,macros,_unstable-all-types,runtime-{runtime},tls-{tls}",
+            f"cargo test --no-default-features --features any,sqlite,macros,migrate,_unstable-all-types,runtime-{runtime},tls-{tls}",
             comment=f"test sqlite",
             service="sqlite",
             tag=f"sqlite" if runtime == "async-std" else f"sqlite_{runtime}",
@@ -171,7 +171,7 @@ for runtime in ["async-std", "tokio"]:
 
         for version in ["15", "14", "13", "12", "11"]:
             run(
-                f"cargo test --no-default-features --features any,postgres,macros,_unstable-all-types,runtime-{runtime},tls-{tls}",
+                f"cargo test --no-default-features --features any,postgres,macros,migrate,_unstable-all-types,runtime-{runtime},tls-{tls}",
                 comment=f"test postgres {version}",
                 service=f"postgres_{version}",
                 tag=f"postgres_{version}" if runtime == "async-std" else f"postgres_{version}_{runtime}",
@@ -180,7 +180,7 @@ for runtime in ["async-std", "tokio"]:
             if tls != "none":
                 ## +ssl
                 run(
-                    f"cargo test --no-default-features --features any,postgres,macros,_unstable-all-types,runtime-{runtime},tls-{tls}",
+                    f"cargo test --no-default-features --features any,postgres,macros,migrate,_unstable-all-types,runtime-{runtime},tls-{tls}",
                     comment=f"test postgres {version} ssl",
                     database_url_args="sslmode=verify-ca&sslrootcert=.%2Ftests%2Fcerts%2Fca.crt",
                     service=f"postgres_{version}",
@@ -189,7 +189,7 @@ for runtime in ["async-std", "tokio"]:
 
                 ## +client-ssl
                 run(
-                    f"cargo test --no-default-features --features any,postgres,macros,_unstable-all-types,runtime-{runtime},tls-{tls}",
+                    f"cargo test --no-default-features --features any,postgres,macros,migrate,_unstable-all-types,runtime-{runtime},tls-{tls}",
                     comment=f"test postgres {version}_client_ssl no-password",
                     database_url_args="sslmode=verify-ca&sslrootcert=.%2Ftests%2Fcerts%2Fca.crt&sslkey=.%2Ftests%2Fkeys%2Fclient.key&sslcert=.%2Ftests%2Fcerts%2Fclient.crt",
                     service=f"postgres_{version}_client_ssl",
@@ -202,7 +202,7 @@ for runtime in ["async-std", "tokio"]:
 
         for version in ["8", "5_7"]:
             run(
-                f"cargo test --no-default-features --features any,mysql,macros,_unstable-all-types,runtime-{runtime},tls-{tls}",
+                f"cargo test --no-default-features --features any,mysql,macros,migrate,_unstable-all-types,runtime-{runtime},tls-{tls}",
                 comment=f"test mysql {version}",
                 service=f"mysql_{version}",
                 tag=f"mysql_{version}" if runtime == "async-std" else f"mysql_{version}_{runtime}",
@@ -211,7 +211,7 @@ for runtime in ["async-std", "tokio"]:
             ## +client-ssl
             if tls != "none" and not(version == "5_7" and tls == "rustls"):
                 run(
-                    f"cargo test --no-default-features --features any,mysql,macros,_unstable-all-types,runtime-{runtime},tls-{tls}",
+                    f"cargo test --no-default-features --features any,mysql,macros,migrate,_unstable-all-types,runtime-{runtime},tls-{tls}",
                     comment=f"test mysql {version}_client_ssl no-password",
                     database_url_args="sslmode=verify_ca&ssl-ca=.%2Ftests%2Fcerts%2Fca.crt&ssl-key=.%2Ftests%2Fkeys%2Fclient.key&ssl-cert=.%2Ftests%2Fcerts%2Fclient.crt",
                     service=f"mysql_{version}_client_ssl",
@@ -224,7 +224,7 @@ for runtime in ["async-std", "tokio"]:
 
         for version in ["10_6", "10_5", "10_4", "10_3"]:
             run(
-                f"cargo test --no-default-features --features any,mysql,macros,_unstable-all-types,runtime-{runtime},tls-{tls}",
+                f"cargo test --no-default-features --features any,mysql,macros,migrate,_unstable-all-types,runtime-{runtime},tls-{tls}",
                 comment=f"test mariadb {version}",
                 service=f"mariadb_{version}",
                 tag=f"mariadb_{version}" if runtime == "async-std" else f"mariadb_{version}_{runtime}",
@@ -233,7 +233,7 @@ for runtime in ["async-std", "tokio"]:
             ## +client-ssl
             if tls != "none":
                 run(
-                    f"cargo test --no-default-features --features any,mysql,macros,_unstable-all-types,runtime-{runtime},tls-{tls}",
+                    f"cargo test --no-default-features --features any,mysql,macros,migrate,_unstable-all-types,runtime-{runtime},tls-{tls}",
                     comment=f"test mariadb {version}_client_ssl no-password",
                     database_url_args="sslmode=verify_ca&ssl-ca=.%2Ftests%2Fcerts%2Fca.crt&ssl-key=.%2Ftests%2Fkeys%2Fclient.key&ssl-cert=.%2Ftests%2Fcerts%2Fclient.crt",
                     service=f"mariadb_{version}_client_ssl",
